@@ -6,7 +6,7 @@
 /*   By: haouadia <haouadia@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/07 10:09:07 by haouadia          #+#    #+#             */
-/*   Updated: 2022/10/15 12:32:54 by haouadia         ###   ########.fr       */
+/*   Updated: 2022/10/23 22:59:28 by haouadia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "libft.h"
@@ -37,3 +37,10 @@ void	*ft_memmove(void *dst, const void *src, size_t len)
 	}
 	return (dst);
 }
+// #include <stdio.h>
+// #include <string.h>
+// int main()
+// {
+// 	char src[12] = "hello,bud!!";
+// 	printf ("%s", ft_memmove(src + 4,src, 6));
+// }

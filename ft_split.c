@@ -5,119 +5,86 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: haouadia <haouadia@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/10/14 11:34:20 by haouadia          #+#    #+#             */
-/*   Updated: 2022/10/18 15:55:04 by haouadia         ###   ########.fr       */
+/*   Created: 2022/10/21 13:41:38 by haouadia          #+#    #+#             */
+/*   Updated: 2022/10/21 13:47:24 by haouadia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "libft.h"
-#include <stdio.h>
 
-static int	len_string(char const *s, char c, int start)
+static void	free_func(char **splited, int i)
 {
-	int	len;
-
-	len = 0;
-	while (s[start])
+	while (i--)
 	{
-		if (s[start] != c)
-		{
-			while (s[start] != c)
-			{
-				start++;
-				len++;
-			}
-			break ;
-		}
-		start++;
+		free (splited[i]);
 	}
-	return (len);
+	free (splited);
 }
 
-static int	string_count(char const *s, char c)
+void	word_malloc(char **splited, char const *s1, char c, int nw)
+{
+	int		i;
+	int		start;
+	size_t	len;
+
+	i = -1;
+	start = 0;
+	while (++i < nw)
+	{
+		len = 0;
+		while (s1[start] && s1[start] == c)
+			start++;
+		while (s1[start] && s1[start] != c)
+		{
+			start++;
+			len++;
+		}
+		splited[i] = ft_substr(s1, start - len, len);
+		if (!splited[i])
+			free_func(splited, i);
+	}
+}
+
+static int	number_of_word(char const *s1, char c)
 {
 	int	i;
 	int	nbr_s;
 
 	i = 0;
 	nbr_s = 0;
-	while (s[i])
+	while (s1[i])
 	{
-		if (s[i] != c)
+		if (s1[i] != c)
 		{
 			nbr_s++;
-			while (s[i] != c && s[i])
+			while (s1[i] && s1[i] != c)
 				i++;
 		}
-		i++;
+		if (s1[i])
+			i++;
 	}
 	return (nbr_s);
 }
 
-static void	fill_string(char *splited, char const *s, char c, int start)
-{
-	int	i;
-
-	i = 0;
-	while (s[start])
-	{
-		if (s[start] != c)
-		{
-			while (s[start] != c)
-			{
-				splited[i++] = s[start];
-				start++;
-			}
-			splited[i] = '\0';
-			break ;
-		}
-		start++;
-	}
-}
-
-static char	**str_malloc(char **splited, char const *s, char c)
-{
-	int		i;
-	int		str_nbr;
-	int		start;
-
-	i = -1;
-	start = 0;
-	str_nbr = string_count(s, c);
-	while (++i < str_nbr)
-	{
-		splited[i] = malloc(sizeof(char) * (len_string(s, c, start) + 1));
-		if (!splited[i])
-		{
-			i = 0;
-			while (splited[i])
-				free (splited[i]);
-			return (0);
-		}
-			
-		fill_string(splited[i], s, c, start);
-		while (s[start])
-		{
-			if (s[start++] != c)
-			{
-				while (s[start] != c)
-					start++;
-				break ;
-			}
-		}
-	}
-	splited[i] = NULL;
-	return (splited);
-}
-
 char	**ft_split(char const *s, char c)
 {
-	int		str_nbr;
 	char	**splited;
 
-	str_nbr = string_count(s, c);
-	splited = (char **)malloc(sizeof(char *) * (str_nbr + 1));
-	if (!splited)
+	if (!s)
+		return (NULL);
+	splited = malloc(sizeof(char *) * (number_of_word(s, c) + 1));
+	if (!(splited))
 		return (0);
-	str_malloc(splited, s, c);
+	word_malloc(splited, s, c, number_of_word(s, c));
+	splited[number_of_word(s, c)] = NULL;
 	return (splited);
 }
+// #include <stdio.h>
+// int main()
+// {
+// 	char *s1 = "tripouille";
+// 	char c = ' ';
+// 	char **string = ft_split(s1, c);
+// 	int i = 2;
+// 	while (i--)
+// 		printf("|%s|\n", *string++);
+// }
